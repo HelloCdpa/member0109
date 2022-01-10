@@ -1,12 +1,17 @@
 package com.icia.member.dto;
 
 import com.icia.member.entity.MemberEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class MemberSaveDTO {
     @NotBlank(message = "필수입력")
     private String memberEmail;
