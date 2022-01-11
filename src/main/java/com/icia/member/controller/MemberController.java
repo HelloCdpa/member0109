@@ -79,6 +79,11 @@ public class MemberController {
     }
 
 
+    @PostMapping("{memberId}")
+    public @ResponseBody MemberDetailDTO detail(@PathVariable long memberId){
+        MemberDetailDTO member = ms.findById(memberId);
+        return member;
+    }
 
 
 

@@ -3,6 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>findAll</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        function detail(memberId){
+            const reqUrl = "/member/"+ memberId;
+
+        $.ajax({
+            type : 'post',
+            url : reqUrl,
+            dataType : 'json',
+
+            success : function (result){
+                let output="";
+                output += "<table>\n" +
+                    "    <thead>\n" +
+                    "        <tr>\n" +
+                    "            <th>번호</th>\n" +
+                    "            <th>이메일</th>\n" +
+                    "            <th>비밀번호</th>\n" +
+                    "            <th>이름</th>\n" +
+                    "        </tr>\n" +
+                    "    </thead>\n" +
+                    "    <tbody>\n" +
+                    "        <tr>\n" +
+                    "            <td>" + result.memberId + "</td>\n" +
+                    "            <td>" + result.memberEmail + "</td>\n" +
+                    "            <td>" + result.memberPassword + "</td>\n" +
+                    "            <td>" + result.memberName + "</td>\n" +
+                    "        </tr>\n" +
+                    "    </tbody>\n" +
+                    "</table>";
+                document.getElementById("detail-view").innerHTML = output;
+
+
+            },error : function (){
+                alert("요청 실패")
+            }
+
+            })
+        }
+    </script>
+
+
+
+
+
+
+
 </head>
 <body>
 <table>
@@ -26,6 +73,10 @@
         <td><a th:href="@{|/member/delete/${member.memberId}|}">삭제</a></td>
     </tr>
 </table>
+
+<div id="detail-view"> </div>
+
+
 
 </body>
 </html>
