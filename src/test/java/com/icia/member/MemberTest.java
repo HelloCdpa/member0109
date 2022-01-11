@@ -1,6 +1,7 @@
 package com.icia.member;
 
 
+import com.icia.member.dto.MemberDetailDTO;
 import com.icia.member.dto.MemberLoginDTO;
 import com.icia.member.dto.MemberSaveDTO;
 import com.icia.member.entity.MemberEntity;
@@ -58,6 +59,32 @@ public class MemberTest {
         assertThat(login).isTrue();
 
     }
+    @Test
+    @Transactional
+    @Rollback
+    @DisplayName("회원조회 테스트")
+    public void memberDetailTest(){
+        final String email = "조회이메일1";
+        final String password = "조회비밀번호1";
+        final String name = "조회이름1";
+        MemberSaveDTO memberSaveDTO = new MemberSaveDTO(email,password,name);
+        Long memberId = ms.memberSave(memberSaveDTO);
+        MemberDetailDTO detailDTO = ms.findById(memberId);
+        assertThat(memberSaveDTO.getMemberEmail()).isEqualTo(detailDTO.getMemberEmail());
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

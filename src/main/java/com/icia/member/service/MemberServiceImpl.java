@@ -8,6 +8,10 @@ import com.icia.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
@@ -16,6 +20,12 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Long memberSave(MemberSaveDTO memberSaveDTO) {
         MemberEntity memberEntity = MemberEntity.saveMember(memberSaveDTO);
+
+        MemberEntity emailCheckResult = mr.findByMemberEmail(memberSaveDTO.getMemberEmail());
+
+        if(emailCheckResult != null){
+            throw new IllegalStateException("중복된 이메일 입니다!");
+        }
         return mr.save(memberEntity).getId();
     }
 
@@ -33,6 +43,24 @@ public class MemberServiceImpl implements MemberService{
             return false;
         }
 
+    }
+
+    @Override
+    public List<MemberDetailDTO> findAll() {
+        List<MemberEntity> memberEntityList = mr.findAll();
+        List<MemberDetailDTO> memberList = new ArrayList<>();
+        for (MemberEntity e : memberEntityList){
+            memberList.add(MemberDetailDTO.toMemberDetailDTO(e));
+        }
+        return memberList;
+    }
+
+    @Override
+    public MemberDetailDTO findById(Long memberId) {
+        Optional<MemberEntity> memberEntityOptional = mr.findById(memberId);
+        MemberEntity memberEntity = memberEntityOptional.get();
+        MemberDetailDTO member = MemberDetailDTO.toMemberDetailDTO(memberEntity);
+        return member;
     }
 
 

@@ -7,21 +7,25 @@
 <body>
 <table>
     <thead>
-    <th>회원번호</th>
+    <th>번호</th>
     <th>이메일</th>
     <th>비밀번호</th>
     <th>이름</th>
-
-
+    <th>조회</th>
+    <th>조회(ajax)</th>
+    <th>삭제(get)</th>
+    <th>삭제(delete)</th>
     </thead>
-    <td th:text=""></td>
-
-
+    <tr th:each="member:${memberList}">
+        <td th:text="${member.memberId}">번호</td>
+        <td th:text="${member.memberEmail}">이메일</td>
+        <td th:text="${member.memberPassword}">비밀번호</td>
+        <td th:text="${member.memberName}">이름</td>
+        <td><a th:href="@{|/member/${member.memberId}|}">조회</a></td>
+        <td><button th:onclick="detail([[${member.memberId}]])">조회(ajax)</button></td>
+        <td><a th:href="@{|/member/delete/${member.memberId}|}">삭제</a></td>
+    </tr>
 </table>
-
-
-
-
 
 </body>
 </html>

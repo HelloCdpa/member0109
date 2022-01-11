@@ -5,7 +5,22 @@
     <title>detail</title>
 </head>
 <body>
+<table>
+    <thead>
+    <th>번호</th>
+    <th>이메일</th>
+    <th>비밀번호</th>
+    <th>이름</th>
 
+    </thead>
+    <tr>
+        <td th:text="${member.memberId}">번호</td>
+        <td th:text="${member.memberEmail}">이메일</td>
+        <td th:text="${member.memberPassword}">비밀번호</td>
+        <td th:text="${member.memberName}">이름</td>
+
+    </tr>
+</table>
 
 
 </body>

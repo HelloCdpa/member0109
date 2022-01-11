@@ -1,5 +1,6 @@
 package com.icia.member.controller;
 
+import com.icia.member.dto.MemberDetailDTO;
 import com.icia.member.dto.MemberLoginDTO;
 import com.icia.member.dto.MemberSaveDTO;
 import com.icia.member.service.MemberService;
@@ -8,12 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,14 +28,21 @@ public class MemberController {
     }
 
     @PostMapping("save")
-    public String save(@Validated @ModelAttribute("save") MemberSaveDTO memberSaveDTO, BindingResult bindingResult){
+    public String save(@Validated @ModelAttribute("member") MemberSaveDTO memberSaveDTO, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
-            ms.memberSave(memberSaveDTO);
-            return "/member/save";
+        return "/member/save";
+
         } else {
-            return "redirect:/member/login";
+        try {
+            ms.memberSave(memberSaveDTO);
+        }catch (IllegalStateException e){
+            //e.getMessage()에는 서비스에서 지정한 예외 메시지가 담겨있음.
+            bindingResult.reject("emailCheck",e.getMessage());
+            return "/member/save";
         }
+        return "redirect:/member/login";
+    }
     }
 
     @GetMapping("login")
@@ -44,15 +50,48 @@ public class MemberController {
         return "/member/login";
     }
 
+
     @PostMapping("login")
     public String login(@ModelAttribute MemberLoginDTO memberLoginDTO, HttpSession session){
         if(ms.login(memberLoginDTO)){
             session.setAttribute("loginEmail",memberLoginDTO.getMemberEmail());
-            return "/member/findAll";
+            return "redirect:/member/";
         }else{
-            return "redirect:/member/login";
+            return "member/login";
         }
     }
+    @GetMapping("logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "index";
+    }
+    @GetMapping
+    public String findAll(Model model){
+        List<MemberDetailDTO> memberList = ms.findAll();
+        model.addAttribute("memberList",memberList);
+        return "/member/findAll";
+    }
+    @GetMapping("{memberId}")
+    public String detail(@PathVariable("memberId") Long memberId,Model model ){
+        MemberDetailDTO member = ms.findById(memberId);
+        model.addAttribute("member",member);
+        return "/member/detail";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
