@@ -2,9 +2,13 @@ package com.icia.member.controller;
 
 import com.icia.member.dto.MemberDetailDTO;
 import com.icia.member.dto.MemberLoginDTO;
+import com.icia.member.dto.MemberPagingDTO;
 import com.icia.member.dto.MemberSaveDTO;
 import com.icia.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -85,7 +89,11 @@ public class MemberController {
         return member;
     }
 
-
+    @GetMapping
+    public String paging(@PageableDefault(page=1) Pageable pageable, Model model ){
+        Page<MemberPagingDTO> memberList = ms.paging(pageable);
+        return "";
+    }
 
 
 
