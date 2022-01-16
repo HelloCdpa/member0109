@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<body class="container">
+
+<h2>회원제 게시판</h2>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">회원 번호</th>
+        <th scope="col">회원 이름</th>
+        <th scope="col">회원 이메일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member: ${memberList}">
+        <td th:text="${member.memberId}"></td>
+        <td th:text="${member.memberName}"></td>
+        <td th:text="${member.memberEmail}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="container">
+    <ul class="pagination">
+        <li class="page-item">
+            <!--첫 페이지로 가는 링크-->
+            <a class="page-link" th:href="@{/member/(page=1)}">
+                <span>First</span>
+            </a>
+        </li>
+
+        <li th:class="${memberList.first} ? 'page-item disabled'">
+            <!--boardList.first = isFirst() 링크값 # : 그 자리에 머무름
+            boardList.number = getNumber() 내가 현재 3페이지 , getNumber 는 2페이지 이전으로 가려면 getNumber 를 그대로 가져가면 됨-->
+            <a class="page-link" th:href="${memberList.first} ? '#' : @{/member(page=${memberList.number})}">
+                <span>&lt;</span>
+            </a>
+        </li>
+
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:class="${page == memberList.number + 1} ? 'page-item active'">
+            <a class="page-link" th:text="${page}" th:href="@{/board(page=${page})}"></a>
+        </li>
+
+        <li th:class="${memberList.last} ? 'disabled'">
+            <a class="page-link" th:href="${memberList.last} ? '#' : @{/member(page=${memberList.number + 2})}">
+                <span>&gt;</span> <!--삼항연산자 사용-->
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" th:href="@{/member(page=${memberList.totalPages})}">
+                <span>Last</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

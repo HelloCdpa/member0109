@@ -1,5 +1,6 @@
 package com.icia.member.controller;
 
+import com.icia.member.common.PagingConst;
 import com.icia.member.dto.MemberDetailDTO;
 import com.icia.member.dto.MemberLoginDTO;
 import com.icia.member.dto.MemberPagingDTO;
@@ -92,7 +93,13 @@ public class MemberController {
     @GetMapping
     public String paging(@PageableDefault(page=1) Pageable pageable, Model model ){
         Page<MemberPagingDTO> memberList = ms.paging(pageable);
-        return "";
+        model.addAttribute("memberList",memberList);
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
+        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < memberList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : memberList.getTotalPages();
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
+        return "member/paging";
+
     }
 
 
